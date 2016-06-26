@@ -24,7 +24,7 @@ var Global = {};
         submit: function () {
           var link = encodeURIComponent(shortInpLink.value),
             linkName = shortInpName.value, //encodeURIComponent(shortInpName.value),
-            shorterAddress = '/mshort',
+            shorterAddress = '/shorten',
             self = this,
             resBody;
 

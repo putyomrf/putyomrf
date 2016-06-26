@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
+var sequelize = require('./models/index')();
+var dbRecord = require('./models/record')(sequelize);
+
 router.get('/:shortUrl', function (request, response) {
     response.redirect(303, 'http://test.com');
 });

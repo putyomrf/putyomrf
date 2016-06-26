@@ -5,16 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-
-// <--------------database---------------->
-var dblogin = process.env.DBLOGIN || 'putyomrf';
-var dbpassword = process.env.DBPASS || 'empty';
-
-var Sequelize = require('sequelize');
-var sequelize = new Sequelize('putyomrf', dblogin, dbpassword,
-    {dialect: "sqlite", storage: 'database.sqlite'});
-// <--------------database---------------->
-
 var routes = require('./src/index');
 
 var app = express();

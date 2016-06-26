@@ -15,7 +15,7 @@ var sequelize = new Sequelize('putyomrf', dblogin, dbpassword,
     {dialect: "sqlite", storage: 'database.sqlite'});
 // <--------------database---------------->
 
-var routes = require('./routes/index');
+var routes = require('./src/index');
 
 var app = express();
 

@@ -6,7 +6,7 @@ router.get('/:shortUrl', function (request, response) {
 });
 
 router.post('/shorten', function (request, response) {
-    response.send(request.get('host') + '/' + to_url(0));
+    response.send(request.get('host') + '/' + '');
 });
 
 module.exports = router;

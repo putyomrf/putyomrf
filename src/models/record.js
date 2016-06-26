@@ -1,8 +1,11 @@
 var Sequelize = require('sequelize');
 
 module.exports = function (sequelize) {
-    return sequelize.define('records', {
-        longurl: Sequelize.STRING,
+    var record = sequelize.define('records', {
+        url: Sequelize.STRING,
         shorturl: Sequelize.STRING
     });
+
+    sequelize.sync();
+    return record;
 };

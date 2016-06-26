@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Путём</title>
+
+    <link rel="stylesheet" href="./global/styles/resets.css">
+    <link rel="stylesheet" href="./global/styles/burger_icon.css">
+    <link rel="stylesheet" href="./global/styles/sidebar_menu.css">
+    <link rel="stylesheet" href="./global/styles/modal.css">
+    <link rel="stylesheet" href="shorter/styles/main.css">
+
+
+    <script src='./global/scripts/transficons_burger_icon.js'></script>
+    <script src='./global/scripts/sidebar_menu.js'></script>
+    <script src='./global/scripts/modal.js'></script>
+    <script src='./global/libs/nanoajax/nanoajax.min.js'></script>
+    <script src='shorter/scripts/main.js'></script>
+
+</head>
+
+<body>
+
+    <div class="main-wrpr">
+
+        <div class="animated fadeOut modal-window auth-modal">
+            <div class="modal-header">
+                Войти
+            </div>
+            <div class="modal-body">
+                <form action="" class="auth-form">
+                    <div class="auth-form-inp-wrpr">
+                        <div class="auth-inp-icon-box"><i class='u-icon login-icon'></i></div>
+                        <input class='inp-reset auth-form-inp' type="text">
+                    </div>
+                    <br>
+                    <div class="auth-form-inp-wrpr">
+                        <div class="auth-inp-icon-box"><i class='u-icon password-icon'></i></div>
+                        <input class='inp-reset auth-form-inp' type="text">
+                    </div>
+                    <br>
+                    <button class="btn-reset auth-submit-btn" type='submit'>Войти</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="tooltip-wrpr">
+            <!--spinner got http://tobiasahlin.com/spinkit-->
+            <div class="spinner">
+                <div class="spinner-container container1">
+                    <div class="circle1"></div>
+                    <div class="circle2"></div>
+                    <div class="circle3"></div>
+                    <div class="circle4"></div>
+                </div>
+                <div class="spinner-container container2">
+                    <div class="circle1"></div>
+                    <div class="circle2"></div>
+                    <div class="circle3"></div>
+                    <div class="circle4"></div>
+                </div>
+                <div class="spinner-container container3">
+                    <div class="circle1"></div>
+                    <div class="circle2"></div>
+                    <div class="circle3"></div>
+                    <div class="circle4"></div>
+                </div>
+            </div>
+            <div class="msg-tooltip-container animated">
+                <div class='tooltip-close-btn'>
+                    <i class="tooltip-close-icon tcon tcon-menu--xcross tcon-transform" aria-label="toggle menu">
+                        <span class="tcon-menu__lines" aria-hidden="true"></span>
+                        <span class="tcon-visuallyhidden">Меню</span>
+                    </i>
+                </div>
+                <span class='tooltip-msg-txt'></span>
+            </div>
+        </div>
+
+        <div class="sidebar-menu">
+            <div class="sidebar-content-wrpr">
+                <div class="sidebar-logo-wrpr">
+                    <i class="sidebar-logo"></i>
+                </div>
+                <ul class="list-reset sidebar-nav-wrpr">
+
+                    <li class="sidebar-nav-link-wrpr">
+                        <a class='link-reset sidebar-nav-link' href='#'><i class='u-icon nav-link-icon home-icon'></i>Домой</a>
+                    </li>
+                    <li class="sidebar-nav-link-wrpr"><a class='link-reset sidebar-nav-link' href="#"><i class='u-icon nav-link-icon personal-icon'></i>Личный кабинет</a>
+                    </li>
+                    <li class="sidebar-nav-link-wrpr"><a class='link-reset sidebar-nav-link' href="#"><i class='u-icon nav-link-icon'></i>Самфинг елсе</a>
+                    </li>
+                    <li class="sidebar-nav-link-wrpr"><a class='link-reset sidebar-nav-link' href="#"><i class='u-icon nav-link-icon'></i>Эназер синг</a>
+                    </li>
+                </ul>
+                <div class="named-link-checkbox-wrpr">
+                   <div class="custom-checkbox named-checkbox-wrpr">
+                        <input class='custom-checkbox-inp named-link-checkbox' id='checkbox1' type="checkbox">
+                        <label class='custom-checkbox-el' for="checkbox1">
+                        </label>
+                        <label for="checkbox1" class='custom-checkbox-txt'>
+                            Именованная ссылка
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <header>
+            <button type="button" class="sidebar-menu-btn tcon tcon-menu--xcross" aria-label="toggle menu">
+                <span class="tcon-menu__lines" aria-hidden="true"></span>
+                <span class="tcon-visuallyhidden">Меню</span>
+            </button>
+            <ul class="list-reset nav-links-wrpr">
+                <li class='nav-link'><a class='link-reset' href="#">Что это?</a>
+                </li>
+                <li class='nav-link'><a class='link-reset auth-btn' href="#">Войти</a>
+                </li>
+            </ul>
+
+        </header>
+
+
+        <form class="shorter-inp-form">
+
+            <div class="about-wrpr">
+                <span class="about-big">Путём.рф</span>
+                <br>
+                <span class="about-small">
+                   Короче, Склифосовский...
+               </span>
+            </div>
+            <div class='shorter-inp-wrpr clearfix'>
+                <input class='shorter-inp inp-reset inp-short-link' type="text" placeholder="Введите ссылку для сокращения" spellcheck="false">
+                <input class='shorter-inp inp-reset shorter-inp-named inp-short-name animated' type="text" placeholder="Введите имя ссылки" spellcheck="false">
+                <button class='btn-reset shorter-submit-btn' type="submit">
+
+                    <i class='shorter-submit-icon'>
+                    </i>
+
+                    <i class="shorter-clear-icon tcon tcon-menu--xcross tcon-transform" aria-label="toggle menu">
+                        <span class="tcon-menu__lines" aria-hidden="true"></span>
+                        <span class="tcon-visuallyhidden">Меню</span>
+                    </i>
+
+                </button>
+            </div>
+        </form>
+
+
+        <footer>Сервис разработан <a class='link-reset author-link' href='https://vk.com/id8473429'>Валентином Орловым</a>. Дизайн и фронтенд: <a class='link-reset author-link' href='https://vk.com/id197286116'>Бойко Алексей</a>.</footer>
+
+
+    </div>
+
+</body>
+
+</html>

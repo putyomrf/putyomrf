@@ -35,6 +35,15 @@ router.get('/:shortUrl', function (request, response) {
 router.post('/shorten', function (request, response) {
     var url = request.body.url;
     // TODO: Add url validation and encoding
+
+    var url1 = require('url');
+    var parts = url1.parse(url, true);
+    if (parts.protocol == null){parts.protocol = "https" }
+    url = parts.href;
+
+    console.log('New url: '+url+'   protocol: '+parts.protocol);
+
+    //-------------------------url validation----------------------
     dbRecord.findOne({where: {url: url}}).then(function (record) {
         var promise = sequelize.sync();
         if (record) {

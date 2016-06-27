@@ -37,7 +37,6 @@ router.post('/shorten', function (request, response) {
     var url = request.body.url;
     //-------------------------url validation----------------------
     var parts = urllib.parse(url, false);
-    console.log(urllib.format(parts))
     if (parts.protocol == null) {
         parts.protocol = 'http';
         parts.slashes = true;
@@ -48,7 +47,7 @@ router.post('/shorten', function (request, response) {
     parts.hostname = parts.hostname.toLowerCase();
     url = urllib.format(parts);
     //-------------------------url validation----------------------
-    
+
     dbRecord.findOne({where: {url: url}}).then(function (record) {
         var promise = sequelize.sync();
         if (record) {

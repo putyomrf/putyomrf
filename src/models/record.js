@@ -4,18 +4,17 @@ var charWeight = charMap.length;
 function to_url(number) {
     var url = '';
     while (number) {
-        var remainder = number % charWeight;
-        number = Math.floor(number / charWeight);
+        var remainder = (number % charWeight) - 1;
         url = charMap[remainder].toString() + url;
+        number = Math.floor(number / charWeight);
     }
     return url;
 }
 
 function to_number(url) {
-    var number = 0;
+    var number = 1;
     while (url) {
         var index = charMap.indexOf(url[0]);
-        if (index < 0) return -1;
         var power = url.length - 1;
         number += index * (Math.pow(charWeight, power));
         url = url.substring(1);
@@ -32,6 +31,13 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.TEXT, allowNull: true,
             get: function () {
                 return this.getDataValue('shorturl') || to_url(this.getDataValue('id'));
+            }
+        }
+    }, {
+        classMethods: {
+            findOneByShorturl: function (shorturl) {
+                console.log(shorturl);
+                return this.findOne({where: {$or: {shorturl: shorturl, id: to_number(shorturl)}}})
             }
         }
     });

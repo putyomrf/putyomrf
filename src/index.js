@@ -18,8 +18,7 @@ router.get('/:shortUrl', function (request, response) {
         });
 
         promise = promise.catch(function (error) {
-            console.log(error.toString());
-            response.end();
+            response.send(error.toString());
         })
     });
 });
@@ -46,8 +45,7 @@ router.post('/shorten', function (request, response) {
         });
 
         promise = promise.catch(function (error) {
-            console.log(error.toString());
-            response.end();
+            response.send(error.toString());
         });
     });
 });

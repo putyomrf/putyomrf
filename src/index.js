@@ -7,16 +7,11 @@ var dbRecord = sequelize.import('./models/record');
 router.get('/:shortUrl', function (request, response) {
     dbRecord.findOneByShorturl(request.params.shortUrl).then(function (record) {
         var promise = sequelize.sync();
-        if (record) {
-            promise = promise.then(function () {
-                return record.get('url');
-            });
-        }
-        else {
-            promise = promise.then(function () {
-                throw new Error('Not Found');
-            });
-        }
+
+        promise = promise.then(function () {
+            if (record) return record.get('url');
+            throw new Error('Not Found');
+        });
 
         promise = promise.then(function (url) {
             response.redirect(303, url);

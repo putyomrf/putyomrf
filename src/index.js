@@ -34,14 +34,19 @@ router.get('/:shortUrl', function (request, response) {
 
 router.post('/shorten', function (request, response) {
     var url = request.body.url;
-    // TODO: Add url validation and encoding
-
+    // TODO: lowercase
     var url1 = require('url');
-    var parts = url1.parse(url, true);
-    if (parts.protocol == null){parts.protocol = "https" }
-    url = parts.href;
+    var parts = url1.parse(url, false);
+    console.log(url1.format(parts))
+    if (parts.protocol == null) {
+        parts.protocol = 'http';
+        parts.slashes = true;
+        parts.hostname = parts.pathname;
+        parts.pathname = null
+    }
 
-    console.log('New url: '+url+'   protocol: '+parts.protocol);
+    url = url1.format(parts);
+    console.log('New url: ' + url + '   protocol: ' + parts.protocol + ' slaches: ' + parts.slashes);
 
     //-------------------------url validation----------------------
     dbRecord.findOne({where: {url: url}}).then(function (record) {
@@ -51,7 +56,7 @@ router.post('/shorten', function (request, response) {
                 return record;
             })
         } else {
-            promise =  promise.then(function () {
+            promise = promise.then(function () {
                 return dbRecord.create({
                     'url': url,
                     'shorturl': null
@@ -61,7 +66,7 @@ router.post('/shorten', function (request, response) {
 
         promise.then(function (record) {
             var shortUrl = record.get('shorturl');
-            if(!shortUrl) shortUrl = to_url(record.get('id'));
+            if (!shortUrl) shortUrl = to_url(record.get('id'));
 
             response.send(shortUrl)
         })

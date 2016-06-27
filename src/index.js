@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var url1 = require('url');
+var urllib = require('url');
 
 var sequelize = require('./models/index')();
 var dbRecord = require('./models/record')(sequelize);
@@ -35,22 +35,20 @@ router.get('/:shortUrl', function (request, response) {
 
 router.post('/shorten', function (request, response) {
     var url = request.body.url;
-    // TODO: lowercase
-      
-    var parts = url1.parse(url, false);
-    console.log(url1.format(parts))
+    //-------------------------url validation----------------------
+    var parts = urllib.parse(url, false);
+    console.log(urllib.format(parts))
     if (parts.protocol == null) {
         parts.protocol = 'http';
         parts.slashes = true;
         parts.hostname = parts.pathname;
         parts.pathname = null
     }
-     parts.protocol = parts.protocol.toLowerCase();
-     parts.hostname = parts.hostname.toLowerCase();
-    url = url1.format(parts);
-   // console.log('New url: ' + url + '   protocol: ' + parts.protocol + ' slaches: ' + parts.slashes);
-
+    parts.protocol = parts.protocol.toLowerCase();
+    parts.hostname = parts.hostname.toLowerCase();
+    url = urllib.format(parts);
     //-------------------------url validation----------------------
+    
     dbRecord.findOne({where: {url: url}}).then(function (record) {
         var promise = sequelize.sync();
         if (record) {

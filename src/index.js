@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var urllib = require('url');
+var rp = require('request-promise');
 
 var sequelize = require('./models/index')();
 var dbRecord = sequelize.import('./models/record');
@@ -19,8 +20,7 @@ router.get('/:shortUrl', function (request, response) {
 router.post('/shorten', function (request, response) {
     var url = request.body.url;
     var name = request.body.name;
-    
-    //-------------------------url validation----------------------
+
     var parts = urllib.parse(url, false);
     if (parts.protocol == null) {
         parts.protocol = 'http';
@@ -31,9 +31,13 @@ router.post('/shorten', function (request, response) {
     parts.protocol = parts.protocol.toLowerCase();
     parts.hostname = parts.hostname.toLowerCase();
     url = urllib.format(parts);
-    //-------------------------url validation----------------------
 
-    dbRecord.findOne({where: {url: url}}).then(function (record) {
+    url = encodeURI(url);
+    console.log(url);
+
+    rp(url).then(function () {
+        return dbRecord.findOne({where: {url: url}});
+    }).then(function (record) {
         if (record) return record;
         return dbRecord.create({
             'url': url,
@@ -42,8 +46,10 @@ router.post('/shorten', function (request, response) {
     }).then(function (record) {
         response.send(request.get('host') + '/' + record.get('shorturl'));
     }).catch(function (error) {
+        console.log(error);
         response.send(error.toString());
     });
+
 });
 
 module.exports = router;

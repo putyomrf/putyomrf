@@ -36,7 +36,6 @@ module.exports = function (sequelize, DataTypes) {
     }, {
         classMethods: {
             findOneByShorturl: function (shorturl) {
-                console.log(shorturl);
                 return this.findOne({where: {$or: {shorturl: shorturl, id: to_number(shorturl)}}})
             }
         }

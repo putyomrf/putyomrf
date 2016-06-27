@@ -36,7 +36,7 @@ router.post('/shorten', function (request, response) {
     dbRecord.findOne({where: {url: url}}).then(function (record) {
         if (record) return record;
         return dbRecord.findOneByShorturl(name).then(function (record) {
-            if (record) throw new Error('Occupied');
+            if (record && !name) throw new Error('Occupied');
             return dbRecord.create({
                 'url': url,
                 'shorturl': name || null

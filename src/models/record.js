@@ -42,10 +42,15 @@ module.exports = function (sequelize, DataTypes) {
         classMethods: {
             findOneByShorturl: function (shortUrl) {
                 var records = this;
+                
+                if (!shortUrl) return records.sync().then(function () {
+                    return null;
+                });
+
                 return records.findOne({where: {shorturl: shortUrl}}).then(function (record) {
                     if (record) return record;
-                    return records.findOne({where: {id: to_number(shortUrl)}})
-                })
+                    return records.findOne({where: {id: to_number(shortUrl)}});
+                });
             }
         }
     });

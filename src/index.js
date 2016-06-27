@@ -3,38 +3,23 @@ var router = express.Router();
 var urllib = require('url');
 
 var sequelize = require('./models/index')();
-var dbRecord = require('./models/record')(sequelize);
-
-var charMap = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя_1234567890";
-var charWeight = charMap.length;
-
-function to_url(number) {
-    var url = '';
-    while (number) {
-        var remainder = number % charWeight;
-        number = Math.floor(number / charWeight);
-        url = charMap[remainder].toString() + url;
-    }
-    return url;
-}
-
-function to_number(url) {
-    var number = 0;
-    while (url) {
-        var index = charMap.indexOf(url[0]);
-        var power = url.length - 1;
-        number += index * (Math.pow(charWeight, power));
-        url = url.substring(1);
-    }
-    return number;
-}
+var dbRecord = sequelize.import('./models/record');
 
 router.get('/:shortUrl', function (request, response) {
-    response.redirect(303, 'http://test.com');
+    dbRecord.findOneByShorturl(request.params.shortUrl).then(function (record) {
+        if (record) return record.get('url');
+        throw new Error('Not Found');
+    }).then(function (url) {
+        response.redirect(303, url);
+    }).catch(function (error) {
+        response.send(error.toString());
+    });
 });
 
 router.post('/shorten', function (request, response) {
     var url = request.body.url;
+    var name = request.body.name;
+    
     //-------------------------url validation----------------------
     var parts = urllib.parse(url, false);
     if (parts.protocol == null) {
@@ -49,26 +34,15 @@ router.post('/shorten', function (request, response) {
     //-------------------------url validation----------------------
 
     dbRecord.findOne({where: {url: url}}).then(function (record) {
-        var promise = sequelize.sync();
-        if (record) {
-            promise = promise.then(function () {
-                return record;
-            })
-        } else {
-            promise = promise.then(function () {
-                return dbRecord.create({
-                    'url': url,
-                    'shorturl': null
-                });
-            });
-        }
-
-        promise.then(function (record) {
-            var shortUrl = record.get('shorturl');
-            if (!shortUrl) shortUrl = to_url(record.get('id'));
-
-            response.send(shortUrl)
-        })
+        if (record) return record;
+        return dbRecord.create({
+            'url': url,
+            'shorturl': name || null
+        });
+    }).then(function (record) {
+        response.send(request.get('host') + '/' + record.get('shorturl'));
+    }).catch(function (error) {
+        response.send(error.toString());
     });
 });
 

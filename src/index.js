@@ -19,7 +19,7 @@ router.get('/:shortUrl', function (request, response) {
 router.post('/shorten', function (request, response) {
     var url = request.body.url;
     var name = request.body.name;
-    
+
     //-------------------------url validation----------------------
     var parts = urllib.parse(url, false);
     if (parts.protocol == null) {
@@ -35,9 +35,12 @@ router.post('/shorten', function (request, response) {
 
     dbRecord.findOne({where: {url: url}}).then(function (record) {
         if (record) return record;
-        return dbRecord.create({
-            'url': url,
-            'shorturl': name || null
+        return dbRecord.findOneByShorturl(name).then(function (record) {
+            if (record) throw new Error('Occupied');
+            return dbRecord.create({
+                'url': url,
+                'shorturl': name || null
+            });
         });
     }).then(function (record) {
         response.send(request.get('host') + '/' + record.get('shorturl'));

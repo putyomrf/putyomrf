@@ -35,7 +35,6 @@ router.get('/:shortUrl', function (request, response) {
 router.post('/shorten', function (request, response) {
     var url = request.body.url;
     var name = request.body.name;
-
     //-------------------------url validation----------------------
     var parts = urllib.parse(url, false);
     if (parts.protocol == null) {

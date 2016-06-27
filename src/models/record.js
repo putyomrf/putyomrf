@@ -34,6 +34,11 @@ module.exports = function (sequelize, DataTypes) {
             }
         }
     }, {
+        instaceMehods: {
+            isNamed: function () {
+                return this.getDataValue('shorturl') == null;
+            }
+        },
         classMethods: {
             findOneByShorturl: function (shorturl) {
                 return this.findOne({where: {$or: {shorturl: shorturl, id: to_number(shorturl)}}})

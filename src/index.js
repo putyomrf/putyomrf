@@ -6,47 +6,29 @@ var dbRecord = sequelize.import('./models/record');
 
 router.get('/:shortUrl', function (request, response) {
     dbRecord.findOneByShorturl(request.params.shortUrl).then(function (record) {
-        var promise = sequelize.sync();
-
-        promise = promise.then(function () {
-            if (record) return record.get('url');
-            throw new Error('Not Found');
-        });
-
-        promise = promise.then(function (url) {
-            response.redirect(303, url);
-        });
-
-        promise = promise.catch(function (error) {
-            response.send(error.toString());
-        })
+        if (record) return record.get('url');
+        throw new Error('Not Found');
+    }).then(function (url) {
+        response.redirect(303, url);
+    }).catch(function (error) {
+        response.send(error.toString());
     });
 });
 
 router.post('/shorten', function (request, response) {
     var url = request.body.url;
+    var name = request.body.name;
     // TODO: Add url validation and encoding
     dbRecord.findOne({where: {url: url}}).then(function (record) {
-        var promise = sequelize.sync();
-        if (record) {
-            promise = promise.then(function () {
-                return record;
-            })
-        } else {
-            promise = dbRecord.create({
-                'url': url,
-                'shorturl': null
-            });
-        }
-
-        promise = promise.then(function (record) {
-            var shortUrl = record.get('shorturl');
-            response.send(request.get('host') + '/' + shortUrl);
+        if (record) return record;
+        return dbRecord.create({
+            'url': url,
+            'shorturl': name || null
         });
-
-        promise = promise.catch(function (error) {
-            response.send(error.toString());
-        });
+    }).then(function (record) {
+        response.send(request.get('host') + '/' + record.get('shorturl'));
+    }).catch(function (error) {
+        response.send(error.toString());
     });
 });
 

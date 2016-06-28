@@ -241,7 +241,8 @@ var Global = {};
         //Variables
         namedCheckBox = document.querySelector('.named-link-checkbox'),
         isNamedLink = false;
-    
+    namedCheckBox.checked = false;
+
     shorterForm.style.height = FORM_HEIGHT + 'px';//Determine height value for first call
                                                   //of showNamedInput
     
@@ -275,11 +276,12 @@ var Global = {};
       
       setTimeout(function () {
         shortInpLink.classList.remove('shorter-inp-named');
-        
+
         shortInpBtn.classList.remove('shorter-submit-btn-named');
         shortInpBtn.classList.remove('inp-short-name-anim-out');
         shortInpBtn.classList.add('inp-short-name-anim-in');
-        
+
+        shortInpName.value = "";
         shortInpName.style.display = '';
         namedCheckBox.checked = false;
       }, ANIM_DURATION);

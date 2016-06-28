@@ -1,3 +1,5 @@
+var Promise = require("bluebird");
+
 var charMap = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя_1234567890";
 var charWeight = charMap.length;
 
@@ -25,7 +27,7 @@ function to_number(url) {
 module.exports = function (sequelize, DataTypes) {
     var records = sequelize.define('records', {
         url: {
-            type: DataTypes.TEXT, allowNull: false
+            type: DataTypes.TEXT, allowNull: true
         },
         shorturl: {
             type: DataTypes.TEXT, allowNull: true,
@@ -42,14 +44,29 @@ module.exports = function (sequelize, DataTypes) {
         classMethods: {
             findOneByShorturl: function (shortUrl) {
                 var records = this;
-                
-                if (!shortUrl) return records.sync().then(function () {
+
+                if (!shortUrl) return Promise.resolve().then(function () {
                     return null;
                 });
 
                 return records.findOne({where: {shorturl: shortUrl}}).then(function (record) {
                     if (record) return record;
                     return records.findOne({where: {id: to_number(shortUrl)}});
+                });
+            },
+            findAndCountByShorturl: function (shortUrl) {
+                var records = this;
+                if (!shortUrl) return Promise.resolve().then(function () {
+                    return null;
+                });
+
+                records.findAndCountAll({
+                    where: {
+                        $or: {
+                            shorturl: shortUrl,
+                            id: to_number(shortUrl)
+                        }
+                    }
                 });
             }
         }

@@ -88,7 +88,7 @@ router.post('/shorten', function (request, response) {
             url = urijs.normalize(url);
 
             // Validate URI
-            if (urijs.normalize(parts.host) == urijs.normalize(request.hostname))
+            if (urijs.normalize(parts.host) == urijs.normalize('путём.рф'))
                 throw createError("Попытка создания рекурсивной ссылки.", 409);
 
             //return request_promise(url);
@@ -106,10 +106,7 @@ router.post('/shorten', function (request, response) {
         // Send shortened link to user
         .then(function (record) {
             // Decode current hostname (punycode)
-            var url = "http://" + request.get('host') + '/' + record.get('shorturl');
-            var domain = punycode.toUnicode(request.hostname);
-            url = url.replace(request.hostname, domain);
-
+            var url = "http://" + 'путём.рф' + '/' + record.get('shorturl');
             // Send
             response.status(200);
             response.send(url);

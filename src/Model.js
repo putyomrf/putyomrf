@@ -1,5 +1,5 @@
 var sequelize = require('./Entities/index')();
-var dbRecord = sequelize.import('./Entities/record');
+var dbRecord = sequelize.import('./Entities/Record');
 var Promise = require("bluebird");
 var urijs = require('uri-js');
 
@@ -19,25 +19,29 @@ model.redirect.retrieveURL = function (shortedUrl) {
 };
 
 model.shorten = {};
+model.shorten.normalizeUrl = function (url) {
+    // Normalize URI
+    var parts = urijs.parse(url);
+    if (parts.scheme == null || parts.error) {
+        url = "http://" + url;
+        url = url.replace("////", "//");
+        parts = urijs.parse(url);
+    }
+    url = urijs.normalize(url);
+
+    // Validate URI
+    if (urijs.normalize(parts.host) == urijs.normalize('путём.рф'))
+        throw createError("Попытка создания рекурсивной ссылки.", 409);
+
+    return url;
+};
+
 model.shorten.normalizeUrlPromise = function (url) {
     return Promise
         .resolve(url)
         // Normalize URL(convert to URI) and validate
         .then(function (url) {
-            // Normalize URI
-            var parts = urijs.parse(url);
-            if (parts.scheme == null || parts.error) {
-                url = "http://" + url;
-                url = url.replace("////", "//");
-                parts = urijs.parse(url);
-            }
-            url = urijs.normalize(url);
-
-            // Validate URI
-            if (urijs.normalize(parts.host) == urijs.normalize('путём.рф'))
-                throw createError("Попытка создания рекурсивной ссылки.", 409);
-
-            return url;
+            return model.shorten.normalizeUrl(url);
         });
 };
 

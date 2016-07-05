@@ -5,7 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./src/index');
+var routes = require('./src/Controller');
 
 var app = express();
 
@@ -18,6 +18,16 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
+
+app.use(function(error, request, response, next) {
+    if (error.code) response.status(error.code);
+    else {
+        response.status(409);
+        error.message = "Ошибка";
+    }
+    
+    response.send(error.message);
+});
 
 module.exports = app;
 
